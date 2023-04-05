@@ -6,8 +6,9 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import axios from 'axios'
 import ToastCont from './ToastContext';
-import Masonry from '@mui/lab/Masonry';
-import {GoSearch} from 'react-icons/go'
+// import Masonry from '@mui/lab/Masonry';
+import { GoSearch } from 'react-icons/go'
+import Masonry from 'react-masonry-css'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -32,7 +33,7 @@ function App() {
       setsix(res.data)
     }
     fun()
-  }, [open,eigth])
+  }, [open, eigth])
   const { toast } = useContext(ToastCont)
   const [first, setfirst] = useState(false)
   const [third, setthird] = useState(false)
@@ -94,41 +95,51 @@ function App() {
     } else if (res.data[0] == 'Logged-in') {
       toast.success('Logged-in')
       localStorage.setItem('t', true)
-      localStorage.setItem('id',Email)
+      localStorage.setItem('id', Email)
       setfirst(true)
     }
   }
   const [seven, setseven] = useState()
-  
+
   const [nine, setnine] = useState({
-    password:''
+    password: ''
   })
   const deleting = () => {
     seteigth(true)
   }
-  const cancel =()=>{
+  const cancel = () => {
     seteigth(false)
   }
-  const del =async(id)=>{
-    const {password} =nine
-    const d =localStorage.getItem('id')
-    const res = await axios.post(`https://dream-back.onrender.com/photo/del/${id}`,{password,d})
+  const del = async (id) => {
+    console.log(id)
+    const { password } = nine
+    const d = localStorage.getItem('id')
+    const res = await axios.post(`https://dream-back.onrender.com/photo/del/${id}`, { password, d })
     console.log(res.data)
     seteigth(false)
   }
   const [ten, setten] = useState('')
   const [eleven, seteleven] = useState([])
-  const searchhandler =()=>{
-    const filtering = six.filter((e)=>e.lable ===ten)
+  const searchhandler = () => {
+    const filtering = six.filter((e) => e.lable === ten)
     // console.log(filtering)
     seteleven(filtering)
   }
+  const mouseOvers = (i) => {
+    setseven(i)
+  }
+  const breakpointColumnsObj = {
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1
+  };
   return (
     <div className="App container">
       <div className='header'>
         <span><FaUserTie /> jey.ai</span>
-        <input type='text' placeholder='  search by name' onChange={(e)=>setten(e.target.value)}/>
-        <span style={{marginLeft:'-2em',cursor:'pointer'}} onClick={searchhandler}><GoSearch/></span>
+        <input type='text' placeholder='  search by name' onChange={(e) => setten(e.target.value)} />
+        <span style={{ marginLeft: '-2em', cursor: 'pointer' }} onClick={searchhandler}><GoSearch /></span>
         <Button onClick={handleOpen}>Add a photo</Button>
         <Modal
           open={open}
@@ -161,12 +172,13 @@ function App() {
           </Box>
         </Modal>
       </div>
-      {/* <Box sx={{ width: 1300, minHeight: 829 }}> */}
-        {/* <Masonry columns={4} spacing={5}> */}
-        <div style={{display:'flex',flexWrap:'wrap'}} className='gri'>
-          {eleven.length==0 || ten ==''? six.map((item, index) => (
-            <div key={index} onMouseOver={() => setseven(index)} style={{marginLeft:'2em',borderRadius:'1em',position:'relative',width:'400px',height:'300px',marginTop:'2em'}}>
-              {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '19em', cursor: 'pointer',position:'absolute',top:'1em' }}>delete</button>
+      <Masonry
+        breakpointCols={3}
+        className="my-masonry-grid"
+        columnClassName="my-masonry-grid_column">
+        {eleven.length==0 || ten ==''? six.map((item, index) => (
+            <div key={index} onMouseOver={() => setseven(index)} style={{position:'relative', marginLeft:'2em',borderRadius:'1em',marginTop:'10em'}}>
+              {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '15em', cursor: 'pointer',position:'absolute',top:'1em' ,backgroundColor:'lightgreen',width:'100px',borderRadius:'1em'}}>delete</button>
                 <Modal
                   open={eigth}
                   onClose={handleClose}
@@ -189,17 +201,13 @@ function App() {
                   borderBottomRightRadius: 4,
                   display: 'block',
                   width: '100%',
-                  height:'100%',
-                  // padding:'20px',
-                  borderRadius:'1em'
-                  // height: Math.round(Math.random() * 400)
                 }}
               />
-              { seven == index &&<> <span style={{marginLeft:'11em',position:'absolute',bottom:'3em',color:'white'}}>{item.lable}</span></>}
+              { seven == index &&<span style={{marginLeft:'11em',position:'absolute',bottom:'3em',color:'white'}}>{item.lable}</span>}
             </div>
           )):eleven.map((item, index) => (
-            <div key={index} onMouseOver={() => setseven(index)} style={{marginLeft:'2em',borderRadius:'1em',position:'relative',width:'400px',height:'300px',marginTop:'2em'}}>
-              {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '19em', cursor: 'pointer',position:'absolute',top:'1em' }}>delete</button>
+            <div key={index} onMouseOver={() => setseven(index)} style={{position:'relative',marginLeft:'2em',borderRadius:'1em',position:'relative',marginTop:'2em'}}>
+              {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '15em', cursor: 'pointer',position:'absolute',top:'1em',backgroundColor:'lightgreen',width:'100px',borderRadius:'1em' }}>delete</button>
                 <Modal
                   open={eigth}
                   onClose={handleClose}
@@ -222,18 +230,12 @@ function App() {
                   borderBottomRightRadius: 4,
                   display: 'block',
                   width: '100%',
-                  height:'100%',
-                  // padding:'20px',
-                  borderRadius:'1em'
-                  // height: Math.round(Math.random() * 400)
                 }}
               />
-              { seven == index &&<> <span style={{marginLeft:'11em',position:'absolute',bottom:'3em',color:'white'}}>{item.lable}</span></>}
+              { seven == index &&<> <span style={{position:'absolute',bottom:'3em',color:'white',marginLeft:'11em'}}>{item.lable}</span></>}
             </div>
           ))}
-        {/* </Masonry> */}
-      {/* </Box> */}
-      </div>
+      </Masonry>
     </div>
   );
 }
