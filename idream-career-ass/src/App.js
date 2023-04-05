@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import axios from 'axios'
 import ToastCont from './ToastContext';
 import Masonry from '@mui/lab/Masonry';
+import {GoSearch} from 'react-icons/go'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,8 +25,10 @@ function App() {
   const [eigth, seteigth] = useState(false)
   useEffect(() => {
     const fun = async () => {
-      const res = await axios.get('http://localhost:3001/photo')
+      const res = await axios.get('https://dream-back.onrender.com/photo')
       console.log(res.data)
+      let un = res.data.pop()
+      res.data.unshift(un)
       setsix(res.data)
     }
     fun()
@@ -60,7 +63,7 @@ function App() {
   };
   const up = async () => {
     const { lable, photo } = second
-    const res = await axios.post('http://localhost:3001/photo', { lable, photo })
+    const res = await axios.post('https://dream-back.onrender.com/photo', { lable, photo })
     toast.success(res.data)
     console.log(res.data)
     setOpen(false)
@@ -73,7 +76,7 @@ function App() {
   }
   const signup = async () => {
     const { Email, password } = five
-    const res = await axios.post('http://localhost:3001/register', { Email, password })
+    const res = await axios.post('https://dream-back.onrender.com/register', { Email, password })
     console.log(res.data)
     if (res.data == 'failed') {
       return toast.error(res.data)
@@ -84,7 +87,7 @@ function App() {
   }
   const login = async () => {
     const { Email, password } = four
-    const res = await axios.post('http://localhost:3001/login', { Email, password })
+    const res = await axios.post('https://dream-back.onrender.com/login', { Email, password })
     console.log(res.data)
     if (res.data == 'Register first') {
       return toast.error(res.data)
@@ -103,18 +106,29 @@ function App() {
   const deleting = () => {
     seteigth(true)
   }
+  const cancel =()=>{
+    seteigth(false)
+  }
   const del =async(id)=>{
     const {password} =nine
     const d =localStorage.getItem('id')
-    const res = await axios.post(`http://localhost:3001/photo/del/${id}`,{password,d})
+    const res = await axios.post(`https://dream-back.onrender.com/photo/del/${id}`,{password,d})
     console.log(res.data)
     seteigth(false)
+  }
+  const [ten, setten] = useState('')
+  const [eleven, seteleven] = useState([])
+  const searchhandler =()=>{
+    const filtering = six.filter((e)=>e.lable ===ten)
+    // console.log(filtering)
+    seteleven(filtering)
   }
   return (
     <div className="App container">
       <div className='header'>
         <span><FaUserTie /> jey.ai</span>
-        <input type='text' placeholder='  search by name' />
+        <input type='text' placeholder='  search by name' onChange={(e)=>setten(e.target.value)}/>
+        <span style={{marginLeft:'-2em',cursor:'pointer'}} onClick={searchhandler}><GoSearch/></span>
         <Button onClick={handleOpen}>Add a photo</Button>
         <Modal
           open={open}
@@ -149,9 +163,9 @@ function App() {
       </div>
       {/* <Box sx={{ width: 1300, minHeight: 829 }}> */}
         {/* <Masonry columns={4} spacing={5}> */}
-        <div style={{display:'flex'}}>
-          {six.map((item, index) => (
-            <div key={index} onMouseOver={() => setseven(index)} style={{marginLeft:'2em',borderRadius:'1em',position:'relative',width:'450px',height:'300px'}}>
+        <div style={{display:'flex',flexWrap:'wrap'}} className='gri'>
+          {eleven.length==0 || ten ==''? six.map((item, index) => (
+            <div key={index} onMouseOver={() => setseven(index)} style={{marginLeft:'2em',borderRadius:'1em',position:'relative',width:'400px',height:'300px',marginTop:'2em'}}>
               {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '19em', cursor: 'pointer',position:'absolute',top:'1em' }}>delete</button>
                 <Modal
                   open={eigth}
@@ -160,9 +174,43 @@ function App() {
                   aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
-                    <h4>password :</h4>
-                    <input type='password' style={{ width: '100%', height: '2.5em', borderRadius: '.6em' }} onChange={(e) => setnine({ ...nine, password: e.target.value })} />
+                    <h4>login password : </h4>
+                    <input type='password' style={{ width: '100%', height: '2.5em', borderRadius: '.6em' }} placeholder='type 123' onChange={(e) => setnine({ ...nine, password: e.target.value })} />
                     <button onClick={()=>del(item._id)}   style={{ width: '100%', height: '2.8em', marginTop: '1em', cursor: 'pointer' }}>Yes</button>
+                    <button onClick={cancel} style={{ width: '100%', height: '2.8em', marginTop: '1em', cursor: 'pointer' }}>cancel</button>
+                  </Box>
+                </Modal>
+              </>}
+              <img
+                src={item.photo}
+                loading="lazy"
+                style={{
+                  borderBottomLeftRadius: 4,
+                  borderBottomRightRadius: 4,
+                  display: 'block',
+                  width: '100%',
+                  height:'100%',
+                  // padding:'20px',
+                  borderRadius:'1em'
+                  // height: Math.round(Math.random() * 400)
+                }}
+              />
+              { seven == index &&<> <span style={{marginLeft:'11em',position:'absolute',bottom:'3em',color:'white'}}>{item.lable}</span></>}
+            </div>
+          )):eleven.map((item, index) => (
+            <div key={index} onMouseOver={() => setseven(index)} style={{marginLeft:'2em',borderRadius:'1em',position:'relative',width:'400px',height:'300px',marginTop:'2em'}}>
+              {seven == index && <><button onClick={() => deleting(item._id)} style={{ marginLeft: '19em', cursor: 'pointer',position:'absolute',top:'1em' }}>delete</button>
+                <Modal
+                  open={eigth}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <h4>login password : </h4>
+                    <input type='password'  style={{ width: '100%', height: '2.5em', borderRadius: '.6em' }} onChange={(e) => setnine({ ...nine, password: e.target.value })} />
+                    <button onClick={()=>del(item._id)}   style={{ width: '100%', height: '2.8em', marginTop: '1em', cursor: 'pointer' }}>Yes</button>
+                    <button onClick={cancel} style={{ width: '100%', height: '2.8em', marginTop: '1em', cursor: 'pointer' }}>cancel</button>
                   </Box>
                 </Modal>
               </>}
