@@ -1,0 +1,23 @@
+body{
+  background-color: rgb(206, 191, 169);
+  height: 100vh;
+}
+.header{
+  padding: 20px;
+}
+.header > input{
+  width: 30em;
+  height: 2.5em;
+  border-radius: .5em;
+  margin-left: 2em;
+  border: none;
+}
+.header > button{
+  height: 2.7em;
+  border-radius: .6em;
+  border: none;
+  margin-left: 30vw;
+  background-color: rgb(41, 150, 4);
+  color: white;
+}
+ 

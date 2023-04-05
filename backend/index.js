@@ -1,0 +1,16 @@
+const express =require('express')
+
+const app =express()
+app.use(express.urlencoded())
+app.use(express.json())
+const mongoose = require('mongoose')
+const cors =require('cors')
+app.use(cors())
+app.use('/login',require('./Login'))
+app.use('/register',require('./Register'))
+app.use('/photo',require('./upload'))
+app.listen(3001,async()=>{
+    await mongoose.connect('mongodb+srv://Aro:aro123@arockiajeyson.aswzaya.mongodb.net/?retryWrites=true&w=majority')
+    console.log('port is connected')
+    console.log('Db is connected')
+})
